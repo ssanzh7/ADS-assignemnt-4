@@ -38,7 +38,7 @@ This project implements a graph data structure using an **Adjacency List**. It i
 
 ## E. Analysis questions
 1.  Performance decreases as size increases because more nodes and edges need to be processed.
-2.  (Answer based on your results, usually BFS and DFS are very close).
+2.  usually BFS and DFS are very close.
 3.  Yes, the time growth correlates with the increase in nodes and edges.
 4.  When you need to find the shortest path or nodes nearby.
 5.  It can lead to a `StackOverflowError` on very deep graphs and doesn't find the shortest path.
