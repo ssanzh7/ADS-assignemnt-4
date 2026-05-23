@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Graph {
-    private Map<Integer, List<Integer>> adjList;
+    private Map<Integer, List<Edge>> adjList;
 
     public Graph() {
         adjList = new HashMap<>();
@@ -11,15 +11,69 @@ public class Graph {
         adjList.putIfAbsent(v.getId(), new ArrayList<>());
     }
 
-    public void addEdge(int from, int to) {
+    public void addEdge(int from, int to, int weight) {
         if (adjList.containsKey(from) && adjList.containsKey(to)) {
-            adjList.get(from).add(to);
+            adjList.get(from).add(new Edge(from, to, weight));
         }
     }
 
     public void printGraph() {
         for (int v : adjList.keySet()) {
             System.out.println(v + ": " + adjList.get(v));
+        }
+    }
+
+    public void dijkstra(int start) {
+        int verticesCount = adjList.size();
+        int[] distances = new int[verticesCount];
+        boolean[] visited = new boolean[verticesCount];
+
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        distances[start] = 0;
+
+        for (int i = 0; i < verticesCount - 1; i++) {
+            int minVertex = findMinimumVertex(distances, visited);
+            if (minVertex == -1) break;
+
+            visited[minVertex] = true;
+
+            List<Edge> edges = adjList.getOrDefault(minVertex, new ArrayList<>());
+            for (Edge edge : edges) {
+                int neighbor = edge.getDestination();
+                if (!visited[neighbor]) {
+                    int newDist = distances[minVertex] + edge.getWeight();
+                    if (distances[minVertex] != Integer.MAX_VALUE && newDist < distances[neighbor]) {
+                        distances[neighbor] = newDist;
+                    }
+                }
+            }
+        }
+
+        printDijkstraResults(start, distances);
+    }
+
+    private int findMinimumVertex(int[] distances, boolean[] visited) {
+        int minVertex = -1;
+        int minDistance = Integer.MAX_VALUE;
+
+        for (int i = 0; i < distances.length; i++) {
+            if (!visited[i] && distances[i] < minDistance) {
+                minDistance = distances[i];
+                minVertex = i;
+            }
+        }
+        return minVertex;
+    }
+
+    private void printDijkstraResults(int start, int[] distances) {
+        System.out.println("Dijkstra Shortest Paths from node " + start + ":");
+        for (int i = 0; i < distances.length; i++) {
+            System.out.print("  Node " + i + " -> ");
+            if (distances[i] == Integer.MAX_VALUE) {
+                System.out.println("Distance: Unreachable");
+            } else {
+                System.out.println("Distance: " + distances[i]);
+            }
         }
     }
 
@@ -31,8 +85,9 @@ public class Graph {
         while (!queue.isEmpty()) {
             int v = queue.poll();
             System.out.print(v + " ");
-            List<Integer> neighbors = adjList.getOrDefault(v, new ArrayList<>());
-            for (int neighbor : neighbors) {
+            List<Edge> edges = adjList.getOrDefault(v, new ArrayList<>());
+            for (Edge edge : edges) {
+                int neighbor = edge.getDestination();
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     queue.add(neighbor);
@@ -51,8 +106,9 @@ public class Graph {
     private void dfsRecursive(int v, Set<Integer> visited) {
         visited.add(v);
         System.out.print(v + " ");
-        List<Integer> neighbors = adjList.getOrDefault(v, new ArrayList<>());
-        for (int neighbor : neighbors) {
+        List<Edge> edges = adjList.getOrDefault(v, new ArrayList<>());
+        for (Edge edge : edges) {
+            int neighbor = edge.getDestination();
             if (!visited.contains(neighbor)) {
                 dfsRecursive(neighbor, visited);
             }

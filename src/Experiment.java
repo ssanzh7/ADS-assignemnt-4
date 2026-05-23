@@ -11,6 +11,11 @@ public class Experiment {
         g.dfs(0);
         long endDfs = System.nanoTime();
         System.out.println("DFS Execution Time: " + (endDfs - startDfs) + " ns");
+
+        long startDijkstra = System.nanoTime();
+        g.dijkstra(0);
+        long endDijkstra = System.nanoTime();
+        System.out.println("Dijkstra Execution Time: " + (endDijkstra - startDijkstra) + " ns");
     }
 
     public void runMultipleTests() {
@@ -30,7 +35,8 @@ public class Experiment {
         }
         Random rand = new Random();
         for (int i = 0; i < size * 1.5; i++) {
-            g.addEdge(rand.nextInt(size), rand.nextInt(size));
+            int randomWeight = rand.nextInt(20) + 1;
+            g.addEdge(rand.nextInt(size), rand.nextInt(size), randomWeight);
         }
         return g;
     }

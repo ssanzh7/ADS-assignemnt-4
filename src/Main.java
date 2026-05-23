@@ -1,6 +1,10 @@
+import java.util.Random;
+
 public class Main {
     public static void main(String[] args) {
         int[] sizes = {10, 30, 100};
+        Random random = new Random();
+
         for (int size : sizes) {
             Graph g = new Graph();
             for (int i = 0; i < size; i++) {
@@ -8,34 +12,30 @@ public class Main {
             }
 
             for (int i = 0; i < size - 1; i++) {
-                g.addEdge(i, i + 1);
+                int randomWeight = random.nextInt(20) + 1;
+                g.addEdge(i, i + 1, randomWeight);
             }
 
+            System.out.println("=====================================");
             System.out.println("Graph Size: " + size);
+            System.out.println("=====================================");
 
-            if (size == 10) {
-                System.out.print("BFS Traversal Order: ");
-                long startBfs = System.nanoTime();
-                g.bfs(0);
-                long endBfs = System.nanoTime();
-                System.out.println("BFS Time: " + (endBfs - startBfs) + " ns");
+            long startBfs = System.nanoTime();
+            if (size == 10) System.out.print("BFS Traversal Order: ");
+            g.bfs(0);
+            long endBfs = System.nanoTime();
+            System.out.println("BFS Time: " + (endBfs - startBfs) + " ns\n");
 
-                System.out.print("DFS Traversal Order: ");
-                long startDfs = System.nanoTime();
-                g.dfs(0);
-                long endDfs = System.nanoTime();
-                System.out.println("DFS Time: " + (endDfs - startDfs) + " ns");
-            } else {
-                long startBfs = System.nanoTime();
-                g.bfs(0);
-                long endBfs = System.nanoTime();
-                System.out.println("BFS Execution Time: " + (endBfs - startBfs) + " ns");
+            long startDfs = System.nanoTime();
+            if (size == 10) System.out.print("DFS Traversal Order: ");
+            g.dfs(0);
+            long endDfs = System.nanoTime();
+            System.out.println("DFS Time: " + (endDfs - startDfs) + " ns\n");
 
-                long startDfs = System.nanoTime();
-                g.dfs(0);
-                long endDfs = System.nanoTime();
-                System.out.println("DFS Execution Time: " + (endDfs - startDfs) + " ns");
-            }
+            long startDijkstra = System.nanoTime();
+            g.dijkstra(0);
+            long endDijkstra = System.nanoTime();
+            System.out.println("Dijkstra Execution Time: " + (endDijkstra - startDijkstra) + " ns");
             System.out.println();
         }
     }
